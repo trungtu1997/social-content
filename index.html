@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Social Content</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon"><i class="ti ti-chart-dots"></i></div>
+      <div class="sidebar-logo-name">Social Content</div>
+    </div>
+    <div class="sidebar-section">Kênh của bạn</div>
+    <div class="sidebar-channels" id="sidebar-channels">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="btn btn-secondary btn-full btn-sm" onclick="openAddChannel()">
+        <i class="ti ti-plus"></i> Thêm kênh
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <!-- TOPBAR -->
+    <div id="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-actions">
+        <div style="position:relative">
+          <button class="btn-icon" onclick="toggleUserMenu()" id="user-btn" aria-label="Tài khoản">
+            <div class="avatar" id="topbar-avatar" style="width:32px;height:32px;font-size:12px">?</div>
+          </button>
+          <div id="user-menu" class="hidden" style="position:absolute;right:0;top:44px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:200px;box-shadow:var(--shadow-md);z-index:100">
+            <div style="padding:.75rem 1rem;border-bottom:1px solid var(--border)">
+              <div style="font-size:13px;font-weight:500" id="menu-name">Người dùng</div>
+              <div style="font-size:11px;color:var(--text-muted)" id="menu-email"></div>
+            </div>
+            <div style="padding:.5rem">
+              <button class="btn btn-secondary btn-full btn-sm" style="justify-content:flex-start;gap:8px;margin-bottom:4px" onclick="navigate('profile')">
+                <i class="ti ti-user"></i> Thông tin cá nhân
+              </button>
+              <button class="btn btn-secondary btn-full btn-sm" style="justify-content:flex-start;gap:8px;margin-bottom:4px" onclick="navigate('settings')">
+                <i class="ti ti-settings"></i> Cài đặt
+              </button>
+              <button class="btn btn-danger btn-full btn-sm" style="justify-content:flex-start;gap:8px" onclick="logout()">
+                <i class="ti ti-logout"></i> Đăng xuất
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-icon" onclick="navigate('settings')" aria-label="Cài đặt"><i class="ti ti-settings"></i></button>
+        <button class="btn btn-primary btn-sm" onclick="openAddChannel()">
+          <i class="ti ti-plus"></i> Thêm kênh
+        </button>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div id="page-content">
+      <div class="loading"><div class="spinner"></div> Đang tải...</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ADD CHANNEL -->
+<div class="modal-overlay hidden" id="modal-add-channel">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Thêm kênh mới</h2>
+      <button class="btn-icon" onclick="closeModal('modal-add-channel')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Tên kênh</label>
+        <input type="text" id="ch-name" placeholder="Ví dụ: Fanpage bán giày">
+      </div>
+      <div class="form-group">
+        <label>Nền tảng</label>
+        <select id="ch-platform">
+          <option value="facebook_page">Facebook Page</option>
+          <option value="facebook_group">Facebook Group</option>
+          <option value="instagram">Instagram</option>
+          <option value="threads">Threads</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Slogan</label>
+        <input type="text" id="ch-slogan" placeholder="Câu slogan của kênh">
+      </div>
+      <div class="form-group">
+        <label>Mô tả ngắn</label>
+        <textarea id="ch-desc" placeholder="Kênh này về gì? Đối tượng nào?" style="min-height:70px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-channel')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveChannel()"><i class="ti ti-check"></i> Tạo kênh</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: POST DETAIL -->
+<div class="modal-overlay hidden" id="modal-post-detail">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 id="modal-post-title">Chi tiết bài viết</h2>
+      <button class="btn-icon" onclick="closeModal('modal-post-detail')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" id="modal-post-body"></div>
+    <div class="modal-footer" id="modal-post-footer"></div>
+  </div>
+</div>
+
+<!-- MODAL: PROFILE -->
+<div class="modal-overlay hidden" id="modal-profile">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Thông tin cá nhân</h2>
+      <button class="btn-icon" onclick="closeModal('modal-profile')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+        <div class="avatar" id="profile-avatar" style="width:64px;height:64px;font-size:24px"></div>
+        <div>
+          <div style="font-size:16px;font-weight:600" id="profile-name-display"></div>
+          <div style="font-size:13px;color:var(--text-muted)" id="profile-email-display"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Họ và tên</label>
+        <input type="text" id="profile-name-input">
+      </div>
+      <hr class="divider">
+      <div style="font-size:14px;font-weight:600;margin-bottom:1rem">Đổi mật khẩu</div>
+      <div class="form-group">
+        <label>Mật khẩu mới</label>
+        <input type="password" id="new-password" placeholder="Tối thiểu 6 ký tự">
+      </div>
+      <div class="form-group">
+        <label>Xác nhận mật khẩu</label>
+        <input type="password" id="confirm-password" placeholder="Nhập lại mật khẩu mới">
+      </div>
+      <div class="error-msg" id="profile-error" style="display:none"></div>
+      <div class="success-msg" id="profile-success" style="display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-profile')">Đóng</button>
+      <button class="btn btn-primary" onclick="saveProfile()">Lưu thay đổi</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/content.js"></script>
+</body>
+</html>
+<!-- inject content.js before closing body -->

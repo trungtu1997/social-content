@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F2F2F0;
+  --surface:#FFFFFF;
+  --surface2:#F7F7F5;
+  --surface3:#EFEFEC;
+  --border:#E5E5E1;
+  --border2:#EBEBEA;
+  --txt:#111110;
+  --txt2:#6F6F6B;
+  --txt3:#A8A8A3;
+  --accent:#2563EB;
+  --accent-light:#EFF6FF;
+  --accent-dark:#1D4ED8;
+  --green:#16A34A;
+  --green-bg:#F0FDF4;
+  --amber:#D97706;
+  --amber-bg:#FFFBEB;
+  --red:#DC2626;
+  --red-bg:#FEF2F2;
+  --purple:#7C3AED;
+  --purple-bg:#F5F3FF;
+  --r:10px;
+  --r-lg:16px;
+  --r-xl:20px;
+  --r-2xl:24px;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.04);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 4px 12px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.04);
+  --shadow-md:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --shadow-lg:0 20px 40px rgba(0,0,0,.12),0 4px 12px rgba(0,0,0,.06);
+}
+html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(-12px,16px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(14px,-12px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+.animate-float-1{animation:float1 8s ease-in-out infinite}
+.animate-float-2{animation:float2 10s ease-in-out infinite}
+.animate-spin{animation:spin .7s linear infinite}
+.animate-pulse{animation:pulse 2s ease-in-out infinite}
+.animate-fade-in{animation:fadeIn .2s ease}
+.animate-slide-up{animation:slideUp .25s ease}
